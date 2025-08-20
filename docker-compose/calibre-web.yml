@@ -41,7 +41,7 @@ services:
       traefik.http.routers.calibre.rule: Host(`skiltz.freeboxos.fr`)
       traefik.http.routers.calibre.priority: 1
       traefik.http.routers.calibre.entrypoints: websecure
-      traefik.http.routers.calibre.middlewares: kobo-sync-headers
+      traefik.http.routers.calibre.middlewares: waf@docker,kobo-sync-headers
       #secure-headers,
       traefik.http.routers.calibre.tls.certresolver: myresolver
       traefik.http.services.calibre.loadbalancer.server.port: 8083

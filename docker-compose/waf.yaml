@@ -1,0 +1,12 @@
+services:
+  waf:
+    image: owasp/modsecurity-crs:nginx-alpine
+    environment:
+      - PARANOIA=2
+      - ANOMALY_INBOUND=10
+      - ANOMALY_OUTBOUND=5
+      - BACKEND=http://dummy
+
+  # Dummy service that always returns status HTTP 200 to WAF container
+  dummy: # have to be changed!!!
+    image: traefik/whoami

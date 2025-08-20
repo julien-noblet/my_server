@@ -14,9 +14,8 @@ services:
       DATABASE_URL: postgres://miniflux:secret@minifluxdb/miniflux?sslmode=disable
       RUN_MIGRATIONS: 1
       CREATE_ADMIN: 1
-      ADMIN_USERNAME: skiltz
-      ADMIN_PASSWORD: Nakies85!
-      POCKET_CONSUMER_KEY: 113078-5f82b2cd417df25fda64de3
+      ADMIN_USERNAME: ${MINIFLUX_ADMIN_USERNAME:-admin}
+      ADMIN_PASSWORD: ${MINIFLUX_ADMIN_PASSWORD:-admin}
       BASE_URL: http://miniflux.local/
     networks:
       - blocky
@@ -54,9 +53,8 @@ services:
       DATABASE_URL: postgres://miniflux:secret@minifluxdb/miniflux?sslmode=disable
       RUN_MIGRATIONS: 1
       CREATE_ADMIN: 1
-      ADMIN_USERNAME: skiltz
-      ADMIN_PASSWORD: Nakies85!
-      POCKET_CONSUMER_KEY: 113078-5f82b2cd417df25fda64de3
+      ADMIN_USERNAME: ${MINIFLUX_ADMIN_USERNAME:-admin}
+      ADMIN_PASSWORD: ${MINIFLUX_ADMIN_PASSWORD:-admin}
       BASE_URL: https://skiltz.freeboxos.fr/miniflux/
     networks:
       - blocky

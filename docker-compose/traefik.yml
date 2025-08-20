@@ -54,6 +54,8 @@ services:
       - --certificatesresolvers.myresolver.acme.email=${EMAIL}
       - --certificatesresolvers.myresolver.acme.storage=acme.json
       - --certificatesresolvers.myresolver.acme.tlschallenge=true
+      - --experimental.plugins.traefik-modsecurity-plugin.modulename=github.com/acouvreur/traefik-modsecurity-plugin
+      - --experimental.plugins.traefik-modsecurity-plugin.version=v1.3.0
 
     restart: always
     healthcheck:
@@ -74,12 +76,14 @@ services:
       traefik.http.routers.traefik-secure.entryPoints: websecure
       traefik.http.middlewares.traefik-auth.basicauth.users: ${TRAEFIK_DASHBOARD_CREDENTIALS}
       traefik.http.routers.traefik-secure.rule: Host(`${MAIN_DOMAIN}`) && PathPrefix(`/traefik`)
-      traefik.http.routers.traefik-secure.middlewares: traefik-auth
+      traefik.http.routers.traefik-secure.middlewares: traefik-auth,waf@docker
       traefik.http.routers.traefik-secure.tls: true
       traefik.http.routers.traefik-secure.tls.certresolver: myresolver
       traefik.http.routers.traefik-secure.tls.domains[0].main: ${MAIN_DOMAIN}
       traefik.http.routers.traefik-secure.tls.domains[0].sans: ${MAIN_DOMAIN}
       traefik.http.routers.traefik-secure.service: api@internal
+      traefik.http.middlewares.waf.plugin.traefik-modsecurity-plugin.modSecurityUrl: http://waf:80
+      traefik.http.middlewares.waf.plugin.traefik-modsecurity-plugin.maxBodySize: 10485760
 
 networks:
   traefik:

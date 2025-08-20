@@ -37,6 +37,7 @@ services:
       - --providers.docker=true
       # Do not expose containers unless explicitly requested
       - --providers.docker.exposedbydefault=false
+      - --providers.docker.network=traefik
       # - --providers.docker.allowEmptyServices=true
       - --entryPoints.websecure.address=:443
       # - --entryPoints.loki.address=:3100
@@ -63,7 +64,7 @@ services:
       timeout: 5s
       retries: 3
       start_period: 5s
-    dns: 1.1.1.1
+    dns: 1.1.1.1 # need DNS to renew certificates, if Blocky isn't up yet, it crash
     labels:
       traefik.enable: true
       traefik.http.routers.traefik.entryPoints: web

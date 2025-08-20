@@ -1,0 +1,61 @@
+name: calibre-web
+
+services:
+  calibre-web:
+    image: lscr.io/linuxserver/calibre-web:nightly
+    container_name: calibre-web
+    depends_on:
+      blocky:
+        condition: service_healthy
+      traefik:
+        condition: service_healthy
+    volumes:
+      - calibre-config:/config:rw
+      - calibre-books:/books:rw
+    environment:
+      PUID: 1000 # User ID
+      PGID: 1000 # Group ID
+      TZ: Europe/Paris
+      # optional - not working if aarch64!
+      # DOCKER_MODS: linuxserver/mods:universal-calibre
+      # optional
+      OAUTHLIB_RELAX_TOKEN_SCOPE: 1
+    networks:
+      - blocky  # ==> DNS
+      - traefik # ==> Reverse Proxy
+      - public  # ==> Public Access
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8083"]
+      interval: 30s
+      timeout: 20s
+      retries: 5
+      start_period: 1m
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      traefik.enable: true
+      traefik.docker.network: traefik
+      traefik.http.middlewares.kobo-sync-headers.headers.customrequestheaders.X-Scheme: https
+      traefik.http.middlewares.kobo-sync-headers.headers.accessControlAllowCredentials: true
+      traefik.http.routers.calibre.rule: Host(`skiltz.freeboxos.fr`)
+      traefik.http.routers.calibre.priority: 1
+      traefik.http.routers.calibre.entrypoints: websecure
+      traefik.http.routers.calibre.middlewares: kobo-sync-headers
+      #secure-headers,
+      traefik.http.routers.calibre.tls.certresolver: myresolver
+      traefik.http.services.calibre.loadbalancer.server.port: 8083
+
+volumes:
+  calibre-config:
+    driver: local
+    driver_opts:
+      type: none
+      device: ../calibre/config
+      o: bind
+  calibre-books:
+    driver: local
+    driver_opts:
+      type: none
+      device: ../calibre/books
+      o: bind

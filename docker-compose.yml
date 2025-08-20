@@ -1,0 +1,28 @@
+name: blocky
+
+include:
+  - docker-compose/backup-db.yml
+  - docker-compose/blocky.yml
+  - docker-compose/calibre-web.yml
+  - docker-compose/lists-download.yml
+  - docker-compose/manyfold.yml
+  - docker-compose/miniflux.yml
+  - docker-compose/readeck.yml
+  - docker-compose/traefik.yml
+  #######
+  # WIP #
+  #######
+  #- docker-compose/loki.yml
+  #- docker-compose/kuma.yml
+  #- docker-compose/prometheus.yml
+  #- docker-compose/filebrowser.yml
+  #- docker-compose/grafana.yml
+  #- docker-compose/openbao.yml
+  #- docker-compose/vault.yml
+
+networks:
+  public:
+    name: public_network
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.host_binding_ipv4: "192.168.1.90" # Change this to your host IP

@@ -1,0 +1,47 @@
+---
+services:
+  readeck:
+    image: codeberg.org/readeck/readeck:latest
+    container_name: readeck
+    # ports:
+    # - 8000:8000
+    user: 1000:1000
+    environment:
+      # Defines the application log level. Can be error, warn, info, debug.
+      - READECK_LOG_LEVEL=debug
+        #info
+      # The IP address on which Readeck listens.
+      - READECK_SERVER_HOST=0.0.0.0
+      # The TCP port on which Readeck listens. Update container port above to match (right of colon).
+      - READECK_SERVER_PORT=8000
+      # Optional, the URL prefix of Readeck.
+      - READECK_SERVER_PREFIX=/readeck/
+      # Optional, a list of hostnames allowed in HTTP requests.
+      # - READECK_ALLOWED_HOSTS=readeck.example.com
+    volumes:
+      - ../readeck/data:/readeck
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/bin/readeck", "healthcheck", "-config", "config.toml"]
+      interval: 30s
+      timeout: 2s
+      retries: 3
+    networks:
+      - blocky  # ==> DNS
+      - public  # ==> Get access to internet
+      - traefik # ==> Reverse proxy
+    labels:
+      traefik.enable: true
+      traefik.http.routers.rtr-readeck-secure.entrypoints: websecure
+      traefik.http.routers.rtr-readeck-secure.rule: Host(`skiltz.freeboxos.fr`) && PathPrefix(`/readeck/`)
+      traefik.http.routers.rtr-readeck-secure.tls.certresolver: myresolver
+      traefik.http.routers.rtr-readeck-local.entrypoints: web
+      traefik.http.routers.rtr-readeck-local.rule: Host(`readeck.local`)
+    deploy:
+      resources:
+        limits:
+          cpus: "0.25"
+          memory: 1024M
+        reservations:
+          cpus: "0.125"
+          memory: 512M

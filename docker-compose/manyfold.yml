@@ -1,0 +1,137 @@
+name: manyfold
+
+services:
+  manyfold3d:
+    image: ghcr.io/manyfold3d/manyfold:latest
+    container_name: manyfold3d
+    depends_on:
+      blocky:
+        condition: service_healthy
+      traefik:
+        condition: service_healthy
+      manyfold3d-postgres:
+        condition: service_healthy
+      manyfold3d-redis:
+        condition: service_healthy
+    volumes:
+      - manyfold3d:/libraries
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: Europe/Paris
+      SECRET_KEY_BASE: a_nice_long_random_string
+      REDIS_URL: redis://manyfold3d-redis:6379/1
+      DEFAULT_WORKER_CONCURRENCY: 1
+      MULTIUSER: enable
+      # Database connection details; we recommend using a separate PostgreSQL
+      # server for best performance
+      DATABASE_ADAPTER: postgresql
+      DATABASE_HOST: manyfold3d-postgres
+      DATABASE_PORT: 5432
+      DATABASE_USER: manyfold
+      DATABASE_PASSWORD: password
+      DATABASE_NAME: manyfold
+
+      # "mysql2" is also available, and you can specify all details in a
+      # single DATABASE_URL variable if you prefer:
+      # DATABASE_URL: {adapter}://{user}:{password}@{host}/{name}
+
+      # You can also use the "sqlite3" adapter if you don't want to run a separate
+      # database server. If you do, specify a path to your database file in DATABASE_NAME,
+      # and make sure it's on a persistent volume! Host, user and password aren't required.
+      # DATABASE_URL: sqlite3:/config/manyfold.sqlite3
+
+      # For details of other optional environment variables, including features such
+      # as multiuser mode, visit https://manyfold.app/sysadmin/configuration.html
+    networks:
+      - blocky
+      - manyfold3d
+      - traefik
+      - public
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3214/health" ]
+      interval: 30s
+      timeout: 20s
+      retries: 5
+      start_period: 5m
+
+    labels:
+      traefik.enable: true
+      traefik.docker.network: traefik
+      traefik.http.routers.manyfold3d.rule: Host(`manyfold3d.local`)
+      traefik.http.routers.manyfold3d.entrypoints: web, websecure
+      traefik.http.services.manyfold3d.loadbalancer.server.port: 3214
+  manyfold3d-postgres:
+    image: 'pgautoupgrade/pgautoupgrade:15-alpine'
+    container_name: manyfold3d-postgres
+    volumes:
+      - manyfold3d-postgres:/var/lib/postgresql/data/
+      #- ../backups/postgres.sql:/docker-entrypoint-initdb.d/postgres.sql:ro
+    environment:
+      TZ: Europe/Paris
+      POSTGRES_USER: manyfold # The PostgreSQL user (useful to connect to the database)
+      POSTGRES_PASSWORD: password # The PostgreSQL password (useful to connect to the database)
+      POSTGRES_DB: manyfold # The PostgreSQL default database (automatically created at first launch)
+    # ports:
+    #   - '5432:5432'
+    networks:
+      - manyfold3d
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "manyfold" ]
+      interval: 10s
+      start_period: 30s
+    #cap_add:
+    #  - NET_ADMIN
+    #  - SYS_PTRACE
+    #cap_drop:
+    #  - all
+    # By default, a Postgres database is running on the 5432 port.
+    # If we want to access the database from our computer (outside the container),
+    # we must share the port with our computer's port.
+    # The syntax is [port we want on our machine]:[port we want to retrieve in the container]
+    # Note: You are free to change your computer's port,
+    # but take into consideration that it will change the way
+    # you are connecting to your database.
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.025'
+          memory: 64M
+    security_opt:
+      - no-new-privileges:true
+  manyfold3d-redis:
+    image: redis:alpine
+    container_name: manyfold3d-redis
+    networks:
+      - manyfold3d
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 20s
+      timeout: 3s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 128M
+        reservations:
+          cpus: '0.125'
+          memory: 32M
+
+volumes:
+  manyfold3d:
+    driver: local
+    driver_opts:
+      type: none
+      device: ../manyfold/
+      o: bind
+  manyfold3d-postgres:
+
+networks:
+  manyfold3d:
+    internal: true

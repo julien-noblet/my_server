@@ -1,1 +1,3 @@
 docker-compose/traefik/acme.json
+docker-compose/blocky/config.yml
+docker-compose/blocky/index.html

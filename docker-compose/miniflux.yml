@@ -1,0 +1,120 @@
+services:
+  miniflux:
+    image: miniflux/miniflux:latest
+    container_name: miniflux
+
+    depends_on:
+      blocky:
+        condition: service_healthy
+      minifluxdb:
+        condition: service_healthy
+      traefik:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://miniflux:secret@minifluxdb/miniflux?sslmode=disable
+      RUN_MIGRATIONS: 1
+      CREATE_ADMIN: 1
+      ADMIN_USERNAME: skiltz
+      ADMIN_PASSWORD: Nakies85!
+      POCKET_CONSUMER_KEY: 113078-5f82b2cd417df25fda64de3
+      BASE_URL: http://miniflux.local/
+    networks:
+      - blocky
+      - minifluxback
+      - public
+      - traefik
+    restart: unless-stopped
+    labels:
+      traefik.enable: true
+      traefik.docker.network: traefik
+      traefik.http.routers.rtr-miniflux.rule: Host(`miniflux.local`)
+      traefik.http.routers.rtr-miniflux.entrypoints: web
+    expose:
+      - '8080'
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 128M
+        reservations:
+          cpus: '0.25'
+          memory: 64M
+  miniflux2:
+    image: miniflux/miniflux:latest
+    container_name: miniflux2
+
+    depends_on:
+      blocky:
+        condition: service_healthy
+      minifluxdb:
+        condition: service_healthy
+      traefik:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://miniflux:secret@minifluxdb/miniflux?sslmode=disable
+      RUN_MIGRATIONS: 1
+      CREATE_ADMIN: 1
+      ADMIN_USERNAME: skiltz
+      ADMIN_PASSWORD: Nakies85!
+      POCKET_CONSUMER_KEY: 113078-5f82b2cd417df25fda64de3
+      BASE_URL: https://skiltz.freeboxos.fr/miniflux/
+    networks:
+      - blocky
+      - minifluxback
+      - public
+      - traefik
+    restart: unless-stopped
+    labels:
+      traefik.enable: true
+      traefik.docker.network: traefik
+      traefik.http.routers.rtr-miniflux-pp.rule: Host(`skiltz.freeboxos.fr`) && PathPrefix(`/miniflux`)
+      # traefik.http.routers.rtr-miniflux-pp.middlewares: stripprefix-miniflux@docker
+      # traefik.http.middlewares.stripprefix-miniflux.stripprefix.prefixes: /miniflux/
+      traefik.http.routers.rtr-miniflux-pp.tls.certresolver: myresolver
+      traefik.http.routers.rtr-miniflux-pp.entrypoints: websecure
+      traefik.http.routers.rtr-miniflux-pp.priority: 100
+    expose:
+      - '8080'
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 128M
+        reservations:
+          cpus: '0.25'
+          memory: 64M
+  minifluxdb:
+    image: pgautoupgrade/pgautoupgrade:15-alpine
+    container_name: minifluxdb
+    volumes:
+      - minifluxdb:/var/lib/postgresql/data
+      - ../backups/minifluxdb.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    environment:
+      POSTGRES_USER: miniflux
+      POSTGRES_PASSWORD: secret
+    networks:
+      - minifluxback
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "miniflux" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    deploy:
+        resources:
+          limits:
+            cpus: '0.50'
+            memory: 256M
+          reservations:
+            cpus: '0.25'
+            memory: 64M
+
+networks:
+  minifluxback:
+    internal: true
+    #driver: overlay
+    #attachable: false
+    name: minifluxback
+volumes:
+  minifluxdb:

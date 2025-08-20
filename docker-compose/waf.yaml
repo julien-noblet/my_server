@@ -8,7 +8,6 @@ services:
       - BACKEND=http://dummy
     networks:
       - traefik
-      - public
 
   # Dummy service that always returns status HTTP 200 to WAF container
   dummy: # have to be changed!!!

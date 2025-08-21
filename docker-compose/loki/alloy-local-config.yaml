@@ -37,7 +37,7 @@ loki.write "send_to_loki" {
 
   labels = {
     job = "nginx-modsecurity",
-    container = "waf"
+    container = "waf",
   }
 
   forward_to = [local.file.nginx_logs.output]

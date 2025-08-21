@@ -32,6 +32,7 @@ services:
     - -config.file=/etc/loki/config.yaml
     - -target=read
     - -config.expand-env=true
+    - --pattern-ingester.enabled=true
       #ports:
       #- 3101:3100
       #- 7946
@@ -68,6 +69,7 @@ services:
       - -config.file=/etc/loki/config.yaml 
       - -target=write
       - -config.expand-env=true
+      - --pattern-ingester.enabled=true
       #ports:
       #- 3102:3100
       #- 7946
@@ -110,6 +112,7 @@ services:
       - -target=backend
       - -legacy-read-mode=false
       - -config.expand-env=true
+      - --pattern-ingester.enabled=true
     depends_on:
       traefik:
         condition: service_healthy

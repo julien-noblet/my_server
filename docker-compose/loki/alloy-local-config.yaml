@@ -26,7 +26,40 @@ local.file "nginx_logs" {
   path = "/waf_logs/nginx/access.log"
   format = "auto"
   legacy_positions_file = "/var/log/positions.yaml"
+  forward_to = [loki.process.nginx_logs.receiver]
+}
 
+loki.process "nginx_logs" {
+  stage.regex {
+    expression = "^(?P<remote_addr>[^ ]+) - (?P<remote_user>[^ ]+) \\[(?P<time_local>[^\\]]+)\\] \"(?P<request>[^ ]+) (?P<status>\\d+) (?P<body_bytes_sent>\\d+)\" \"(?P<http_referer>[^\"]*)\" \"(?P<http_user_agent>[^\"]*)\""
+  }
+  stage.timestamp {
+    source = "time_local"
+    format = "02/Jan/2006:15:04:05 -0700"
+  }
+  stage.labels {
+    values = {
+      remote_addr = "",
+      remote_user = "",
+      time_local = "",
+      request = "",
+      status = "",
+      body_bytes_sent = "",
+      http_referer = "",
+      http_user_agent = "",
+    }
+  }
+  stage.static_labels {
+    values = {
+      instance = constants.hostname,
+      service = "waf",
+    job = "nginx-modsecurity",
+    container = "waf",
+  
+    }
+  }
+
+  forward_to = [loki.write.send_to_loki.receiver]
 }
 
 loki.write "send_to_loki" {
@@ -35,12 +68,6 @@ loki.write "send_to_loki" {
     tenant_id = "tenant1"
   }
 
-  labels = {
-    job = "nginx-modsecurity",
-    container = "waf",
-  }
-
-  forward_to = [local.file.nginx_logs.output]
 }
 
 local.file_match "calibre" {

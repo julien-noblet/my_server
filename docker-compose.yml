@@ -12,10 +12,10 @@ include:
   - docker-compose/readeck.yml
   - docker-compose/traefik.yml
   - docker-compose/waf.yaml
+  - docker-compose/loki.yml
   #######
   # WIP #
   #######
-  #- docker-compose/loki.yml
   #- docker-compose/kuma.yml
   #- docker-compose/filebrowser.yml
   #- docker-compose/openbao.yml

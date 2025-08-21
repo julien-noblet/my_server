@@ -1,0 +1,74 @@
+discovery.docker "docker_log_scrape" {
+	host             = "unix:///var/run/docker.sock"
+	refresh_interval = "5s"
+}
+
+discovery.relabel "docker_log_scrape" {
+	targets = []
+
+	rule {
+		source_labels = ["__meta_docker_container_name"]
+		regex         = "/(.*)"
+		target_label  = "container"
+	}
+}
+
+loki.source.docker "docker_log_scrape" {
+	host             = "unix:///var/run/docker.sock"
+	targets          = discovery.docker.docker_log_scrape.targets
+	forward_to       = [loki.write.default.receiver]
+	relabel_rules    = discovery.relabel.docker_log_scrape.rules
+	refresh_interval = "5s"
+  labels           = {"app" = "docker"}
+}
+
+local.file_match "calibre" {
+  path_targets = [{"__path__" = "/calibre/config/*.log", "app"="calibreweb",}]
+}
+
+loki.source.file "calibre" {
+  targets               = local.file_match.calibre.targets
+  forward_to            = [loki.process.calibre.receiver]
+  legacy_positions_file = "/var/log/positions.yaml"
+}
+
+loki.process "calibre" {
+  stage.regex {
+  expression = "^(?s)\\[(?P<timestamp>\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2},\\d+)\\]\\s+(?P<level>\\w+)\\s+\\{(?P<source>[^\\}]+)\\}\\s+(?P<message>.+)$"
+  }
+  stage.timestamp {
+   source = "timestamp"
+   format = "2026-01-02 15:04:05,000"
+  }
+  stage.regex {
+  source = "message"
+  expression = "(?P<file>[^\\s:]+):(?P<line>\\d+):\\s+(?P<message>.+)$"
+  }
+  stage.labels {
+    values = {
+      timestamp = "",
+      level = "",
+      source = "",
+      file = "",
+      line = "",
+      message = "",
+    }
+  }
+  stage.static_labels {
+    values = {
+      instance = constants.hostname,
+      service = "calibre-web",
+      wip = "  //(?P<level>\\S+) \\{(?P<module>.*):(?P<module_line>\\d+)\\} (?P<message>.*)",
+    }
+  }
+
+  forward_to = [loki.write.default.receiver]
+}
+
+loki.write "default" {
+	endpoint {
+    url       = "http://loki-write:3100/loki/api/v1/push"
+    tenant_id = "tenant1"
+	}
+	external_labels = {}
+}

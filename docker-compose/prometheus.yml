@@ -61,6 +61,7 @@ services:
       traefik.docker.network: traefik
       traefik.http.routers.rtr-prometheus.rule: PathPrefix(`/prometheus/`) && ClientIP(`192.168.1.0/24`)
       traefik.http.routers.rtr-prometheus.entrypoints: websecure
+      traefik.http.routers.rtr-prometheus.tls: true
       traefik.http.routers.rtr-prometheus.middlewares: stripprefix-prometheus@docker
       traefik.http.middlewares.stripprefix-prometheus.stripprefix.prefixes: /prometheus/
       traefik.http.services.svc-prometheus.loadbalancer.server.port: 9090

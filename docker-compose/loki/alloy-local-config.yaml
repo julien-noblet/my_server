@@ -158,8 +158,48 @@ loki.process "modsec_audit" {
   stage.json {
     source = "messages"
     expressions = {
-      message = "message",
-      details = "details",
+      message = "",
+      details = "",
+    }
+  }
+ stage.json {
+    source = "details"
+    expressions = {
+      severity = "",
+      maturity = "",
+      accuracy = "",
+    }
+  }
+
+  stage.labels {
+    values = {
+      XRealIp = "",
+      timestamp = "time_stamp",
+      severity = "",
+      maturity = "",
+      accuracy = "",
+      SecChUaMobile = "",
+      XForwardedHost = "",
+      SecChUaPlatform = "",
+      Referer =  "",
+      XForwardedPort = "",
+      AcceptLanguage = "",
+      AcceptEncoding = "",
+      Cookie =  "",
+      SecChUa = "",
+      SecFetchUser = "",
+      Accept = "",
+      Priority = "",
+      UserAgent = "",
+      SecFetchSite = "",
+      XForwardedProto = "",
+      Host = "",
+      SecFetchDest = "",
+      SecFetchMode = "",
+      XForwardedServer = "",
+      UpgradeInsecureRequests = "",
+      method = "",
+      uri = "",
     }
   }
 

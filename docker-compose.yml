@@ -7,6 +7,7 @@ include:
   - docker-compose/lists-download.yml
   - docker-compose/manyfold.yml
   - docker-compose/miniflux.yml
+  - docker-compose/prometheus.yml
   - docker-compose/readeck.yml
   - docker-compose/traefik.yml
   - docker-compose/waf.yaml
@@ -15,7 +16,6 @@ include:
   #######
   #- docker-compose/loki.yml
   #- docker-compose/kuma.yml
-  #- docker-compose/prometheus.yml
   #- docker-compose/filebrowser.yml
   #- docker-compose/grafana.yml
   #- docker-compose/openbao.yml

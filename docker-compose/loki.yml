@@ -129,7 +129,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ../calibre/config/calibre-web.log:/calibre/config/calibre-web.log:ro
       # need waf volume !
-      - waf_logs:/waf_logs:ro
+      - ../waf_logs:/waf_logs:ro
     command:  
     - run 
     - --server.http.listen-addr=0.0.0.0:12345 

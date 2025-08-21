@@ -35,9 +35,9 @@ services:
       traefik.http.routers.rtr-readeck-secure.entrypoints: websecure
       traefik.http.routers.rtr-readeck-secure.rule: Host(`skiltz.freeboxos.fr`) && PathPrefix(`/readeck/`)
       traefik.http.routers.rtr-readeck-secure.tls.certresolver: myresolver
+      traefik.http.routers.rtr-readeck-secure.middlewares: waf@docker
       traefik.http.routers.rtr-readeck-local.entrypoints: web
       traefik.http.routers.rtr-readeck-local.rule: Host(`readeck.local`)
-      traefik.http.routers.rtr-readeck-local.middlewares: waf@docker
     deploy:
       resources:
         limits:

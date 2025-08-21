@@ -4,6 +4,7 @@ include:
   - docker-compose/backup-db.yml
   - docker-compose/blocky.yml
   - docker-compose/calibre-web.yml
+  - docker-compose/grafana.yml
   - docker-compose/lists-download.yml
   - docker-compose/manyfold.yml
   - docker-compose/miniflux.yml
@@ -17,7 +18,6 @@ include:
   #- docker-compose/loki.yml
   #- docker-compose/kuma.yml
   #- docker-compose/filebrowser.yml
-  #- docker-compose/grafana.yml
   #- docker-compose/openbao.yml
   #- docker-compose/vault.yml
 

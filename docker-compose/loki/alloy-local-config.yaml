@@ -36,7 +36,7 @@ loki.write "send_to_loki" {
   }
 
   labels = {
-    job = "nginx-modsecurity"
+    job = "nginx-modsecurity",
     container = "waf"
   }
 

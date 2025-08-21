@@ -22,4 +22,4 @@ services:
       - traefik
 
 volumes:
-  waf_logs:
+  - waf_logs:

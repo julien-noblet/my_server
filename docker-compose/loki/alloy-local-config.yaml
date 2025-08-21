@@ -77,12 +77,12 @@ loki.write "send_to_loki" {
 
 }
 
-loki.file_match "modsec_audit" {
+local.file_match "modsec_audit" {
   path_targets = [{"__path__" = "/waf_logs/modsec_audit.log", "app"="waf",}]
 }
 
 loki.source.file "modsec_audit" {
-  targets               = loki.file_match.modsec_audit.targets
+  targets               = local.file_match.modsec_audit.targets
   forward_to            = [loki.process.modsec_audit.receiver]
   legacy_positions_file = "/var/log/positions.yaml"
 }

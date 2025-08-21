@@ -22,6 +22,17 @@ loki.source.docker "docker_log_scrape" {
   labels           = {"app" = "docker"}
 }
 
+
+local.file_match "nginx_logs" {
+  path_targets = [{"__path__" = "/waf_logs/nginx/access.log", "app"="waf",}]
+}
+
+loki.source.file "nginx_logs" {
+  targets               = local.file_match.nginx_logs.targets
+  forward_to            = [loki.process.nginx_logs.receiver]
+  legacy_positions_file = "/var/log/positions.yaml"
+}
+
 local.file "nginx_logs" {
   path = "/waf_logs/nginx/access.log"
   format = "auto"

@@ -1,0 +1,70 @@
+name: grafana
+
+services:
+  grafana:
+    image: grafana/grafana-enterprise:latest
+    container_name: grafana
+    depends_on:
+      blocky:
+        condition: service_healthy
+      prometheus:
+        condition: service_started
+      traefik:
+        condition: service_healthy
+    volumes:
+      - grafana-storage:/var/lib/grafana
+      - grafana_dashboards:/var/lib/grafana/dashboards
+    environment:
+      GF_PANELS_DISABLE_SANITIZE_HTML: true
+      # temporary password, should be changed on 1st run
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ALLOW_EMBEDDING: true
+      # are in /var/lib/grafana/dashboards
+      GF_DASHBOARDS_JSON_ENABLED: true
+      GF_DASHBOARDS_JSON_PATH: /var/lib/grafana/dashboards
+      GF_DASHBOARDS_JSON_REFRESH: 1m
+      GF_DASHBOARDS_JSON_WATCH: true
+      GF_DASHBOARDS_JSON_UPDATE_INTERVAL: 1m
+      GF_DASHBOARDS_JSON_ALLOW_UI_UPDATE: true
+      # set prometheus sources on http://prometheus:9090
+    networks:
+      - blocky
+      - blocky_internal
+      - public # internet access
+      - traefik
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:3000" ]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    labels:
+      traefik.enable: true
+      traefik.docker.network: traefik
+      traefik.http.routers.rtr-grafana.rule: Host(`grafana.local`)
+      traefik.http.routers.rtr-grafana.entrypoints: web
+      # traefik.http.routers.rtr-grafana.middlewares: stripprefix-grafana@docker
+      # traefik.http.middlewares.stripprefix-grafana.stripprefix.prefixes: /grafana"
+      
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 128M
+        reservations:
+          cpus: '0.25'
+          memory: 64M
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  grafana-storage:
+  grafana_dashboards:
+    # ./grafana
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./grafana/dashboards

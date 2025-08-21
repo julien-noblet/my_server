@@ -99,17 +99,17 @@ loki.process "modsec_audit" {
   stage.json {
     source = "transaction"
     expressions = {
-      client_ip = "client_ip",
-      time_stamp = "time_stamp",
-      server_id = "server_id",
-      client_port = "client_port",
-      host_ip = "host_ip",
-      host_port = "host_port",
-      unique_id = "unique_id",
-      request = "request",
-      response = "response",
-      producer = "producer",
-      messages = "messages",
+      client_ip = "",
+      time_stamp = "",
+      server_id = "",
+      client_port = "",
+      host_ip = "",
+      host_port = "",
+      unique_id = "",
+      request = "",
+      response = "",
+      producer = "",
+      messages = "",
     }
   }
 
@@ -121,37 +121,37 @@ loki.process "modsec_audit" {
   stage.json {
     source = "request"
     expressions = {
-      method = "method",
-      http_version = "http_version",
-      uri = "uri",
-      headers = "headers",
+      method = "",
+      http_version = "",
+      uri = "",
+      headers = "",
     }
   }
 
   stage.json {
     source = "headers"
     expressions = {
-      "Sec-Ch-Ua-Mobile" = "Sec-Ch-Ua-Mobile",
-      "X-Forwarded-Host" = "X-Forwarded-Host",
-      "Sec-Ch-Ua-Platform" = "Sec-Ch-Ua-Platform",
-      "Referer" = "Referer",
-      "X-Forwarded-Port" = "X-Forwarded-Port",
-      "Accept-Language" = "Accept-Language",
-      "Accept-Encoding" = "Accept-Encoding",
-      "Cookie" = "Cookie",
-      "Sec-Ch-Ua" = "Sec-Ch-Ua",
-      "Sec-Fetch-User" = "Sec-Fetch-User",
-      "Accept" = "Accept",
-      "Priority" = "Priority",
-      "User-Agent" = "User-Agent",
-      "Sec-Fetch-Site" = "Sec-Fetch-Site",
-      "X-Forwarded-Proto" = "X-Forwarded-Proto",
-      "Host" = "Host",
-      "Sec-Fetch-Dest" = "Sec-Fetch-Dest",
-      "Sec-Fetch-Mode" = "Sec-Fetch-Mode",
-      "X-Forwarded-Server" = "X-Forwarded-Server",
-      "Upgrade-Insecure-Requests" = "Upgrade-Insecure-Requests",
-      "X-Real-Ip" = "X-Real-Ip",
+      SecChUaMobile = "Sec-Ch-Ua-Mobile",
+      XForwardedHost = "X-Forwarded-Host",
+      SecChUaPlatform = "Sec-Ch-Ua-Platform",
+      Referer = "Referer",
+      XForwardedPort = "X-Forwarded-Port",
+      AcceptLanguage = "Accept-Language",
+      AcceptEncoding = "Accept-Encoding",
+      Cookie = "Cookie",
+      SecChUa = "Sec-Ch-Ua",
+      SecFetchUser = "Sec-Fetch-User",
+      Accept = "Accept",
+      Priority = "",
+      UserAgent = "User-Agent",
+      SecFetchSite = "Sec-Fetch-Site",
+      XForwardedProto = "X-Forwarded-Proto",
+      Host = "Host",
+      SecFetchDest = "Sec-Fetch-Dest",
+      SecFetchMode = "Sec-Fetch-Mode",
+      XForwardedServer = "X-Forwarded-Server",
+      UpgradeInsecureRequests = "Upgrade-Insecure-Requests",
+      XRealIp = "X-Real-Ip",
     }
   }
 

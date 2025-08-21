@@ -22,6 +22,27 @@ loki.source.docker "docker_log_scrape" {
   labels           = {"app" = "docker"}
 }
 
+local.file "nginx_logs" {
+  path = "/waf_logs/nginx/access.log"
+  format = "auto"
+  legacy_positions_file = "/var/log/positions.yaml"
+
+}
+
+loki.write "send_to_loki" {
+  endpoint {
+    url = "http://loki-write:3100/loki/api/v1/push"
+    tenant_id = "tenant1"
+  }
+
+  labels = {
+    job = "nginx-modsecurity"
+    container = "waf"
+  }
+
+  forward_to = [local.file.nginx_logs.output]
+}
+
 local.file_match "calibre" {
   path_targets = [{"__path__" = "/calibre/config/*.log", "app"="calibreweb",}]
 }

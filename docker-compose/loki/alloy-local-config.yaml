@@ -131,27 +131,27 @@ loki.process "modsec_audit" {
   stage.json {
     source = "headers"
     expressions = {
-      SecChUaMobile = "Sec-Ch-Ua-Mobile",
-      XForwardedHost = "X-Forwarded-Host",
-      SecChUaPlatform = "Sec-Ch-Ua-Platform",
-      Referer = "Referer",
-      XForwardedPort = "X-Forwarded-Port",
-      AcceptLanguage = "Accept-Language",
-      AcceptEncoding = "Accept-Encoding",
-      Cookie = "Cookie",
-      SecChUa = "Sec-Ch-Ua",
-      SecFetchUser = "Sec-Fetch-User",
-      Accept = "Accept",
+      SecChUaMobile = `"Sec-Ch-Ua-Mobile"`,
+      XForwardedHost = `"X-Forwarded-Host"`,
+      SecChUaPlatform = `"Sec-Ch-Ua-Platform"`,
+      Referer =  "",
+      XForwardedPort = `"X-Forwarded-Port"`,
+      AcceptLanguage = `"Accept-Language"`,
+      AcceptEncoding = `"Accept-Encoding"`,
+      Cookie =  "",
+      SecChUa = `"Sec-Ch-Ua"`,
+      SecFetchUser = `"Sec-Fetch-User"`,
+      Accept = "",
       Priority = "",
-      UserAgent = "User-Agent",
-      SecFetchSite = "Sec-Fetch-Site",
-      XForwardedProto = "X-Forwarded-Proto",
-      Host = "Host",
-      SecFetchDest = "Sec-Fetch-Dest",
-      SecFetchMode = "Sec-Fetch-Mode",
-      XForwardedServer = "X-Forwarded-Server",
-      UpgradeInsecureRequests = "Upgrade-Insecure-Requests",
-      XRealIp = "X-Real-Ip",
+      UserAgent = `"User-Agent"`,
+      SecFetchSite = `"Sec-Fetch-Site"`,
+      XForwardedProto = `"X-Forwarded-Proto"`,
+      Host = "",
+      SecFetchDest = `"Sec-Fetch-Dest"`,
+      SecFetchMode = `"Sec-Fetch-Mode"`,
+      XForwardedServer = `"X-Forwarded-Server"`,
+      UpgradeInsecureRequests = `"Upgrade-Insecure-Requests"`,
+      XRealIp = `"X-Real-Ip"`,
     }
   }
 
@@ -162,7 +162,7 @@ loki.process "modsec_audit" {
       details = "details",
     }
   }
-  
+
   forward_to = [loki.write.default.receiver]
 }
 

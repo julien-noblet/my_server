@@ -162,7 +162,8 @@ loki.process "modsec_audit" {
       details = "details",
     }
   }
-
+  
+  forward_to = [loki.write.default.receiver]
 }
 
 local.file_match "calibre" {

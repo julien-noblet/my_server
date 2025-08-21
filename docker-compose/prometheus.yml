@@ -57,7 +57,7 @@ services:
       - --web.enable-lifecycle
     restart: unless-stopped
     labels:
-      traefik.enable: true
+      traefik.enable: false
       traefik.docker.network: traefik
       traefik.http.routers.rtr-prometheus.rule: PathPrefix(`/prometheus/`) && ClientIP(`192.168.1.0/24`)
       traefik.http.routers.rtr-prometheus.entrypoints: websecure

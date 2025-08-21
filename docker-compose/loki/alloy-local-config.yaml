@@ -33,12 +33,6 @@ loki.source.file "nginx_logs" {
   legacy_positions_file = "/var/log/positions.yaml"
 }
 
-local.file "nginx_logs" {
-  path = "/waf_logs/nginx/access.log"
-  format = "auto"
-  legacy_positions_file = "/var/log/positions.yaml"
-  forward_to = [loki.process.nginx_logs.receiver]
-}
 
 loki.process "nginx_logs" {
   stage.regex {

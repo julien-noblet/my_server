@@ -258,6 +258,98 @@ loki.process "calibre" {
   forward_to = [loki.write.default.receiver]
 }
 
+loki.file_match "traefik_access" {
+  path_targets = [{"__path__" = "/var/log/traefik/access.log", "app"="traefik",}]
+}
+
+loki.source.file "traefik_access" {
+  targets               = loki.file_match.traefik_access.targets
+  forward_to            = [loki.process.traefik_access.receiver]
+  legacy_positions_file = "/var/log/positions.yaml"
+}
+
+loki.process "traefik_access" {
+  // {"ClientAddr":"37.167.32.89:23254","ClientHost":"37.167.32.89","ClientPort":"23254","ClientUsername":"-","DownstreamContentSize":548,"DownstreamStatus":403,"Duration":32401347,"GzipRatio":0,"OriginContentSize":0,"OriginDuration":0,"OriginStatus":0,"Overhead":32401347,"RequestAddr":"skiltz.freeboxos.fr","RequestContentSize":0,"RequestCount":1,"RequestHost":"skiltz.freeboxos.fr","RequestMethod":"GET","RequestPath":"/login?next=%2F/../","RequestPort":"-","RequestProtocol":"HTTP/2.0","RequestScheme":"https","RetryAttempts":0,"RouterName":"calibre-secure@docker","StartLocal":"2025-08-22T20:12:41.974551161+02:00","StartUTC":"2025-08-22T18:12:41.974551161Z","TLSCipher":"TLS_AES_128_GCM_SHA256","TLSVersion":"1.3","entryPointName":"websecure","level":"info","msg":"","time":"2025-08-22T20:12:42+02:00"}
+  stage.json {
+    expressions = {
+      ClientAddr = "",
+      ClientHost = "",
+      ClientPort = "",
+      ClientUsername = "",
+      DownstreamContentSize = "",
+      DownstreamStatus = "",
+      Duration = "",
+      GzipRatio = "",
+      OriginContentSize = "",
+      OriginDuration = "",
+      OriginStatus = "",
+      Overhead = "",
+      RequestAddr = "",
+      RequestContentSize = "",
+      RequestCount = "",
+      RequestHost = "",
+      RequestMethod = "",
+      RequestPath = "",
+      RequestPort = "",
+      RequestProtocol = "",
+      RequestScheme = "",
+      RetryAttempts = "",
+      RouterName = "",
+      StartLocal = "",
+      StartUTC = "",
+      TLSCipher = "",
+      TLSVersion = "",
+      entryPointName = "",
+      level = "",
+      msg = "",
+      time = "",
+    }
+  }
+
+  process.timestamp {
+    source = "StartUTC"
+    format = "2006-01-02T15:04:05.000000000Z07:00"
+  }
+
+  labels {
+    values = {
+      ClientAddr = "",
+      ClientHost = "",
+      ClientPort = "",
+      ClientUsername = "",
+      DownstreamContentSize = "",
+      DownstreamStatus = "",
+      Duration = "",
+      GzipRatio = "",
+      OriginContentSize = "",
+      OriginDuration = "",
+      OriginStatus = "",
+      Overhead = "",
+      RequestAddr = "",
+      RequestContentSize = "",
+      RequestCount = "",
+      RequestHost = "",
+      RequestMethod = "",
+      RequestPath = "",
+      RequestPort = "",
+      RequestProtocol = "",
+      RequestScheme = "",
+      RetryAttempts = "",
+      RouterName = "",
+      StartLocal = "",
+      StartUTC = "",
+      TLSCipher = "",
+      TLSVersion = "",
+      entryPointName = "",
+      level = "",
+      msg = "",
+      time = "",
+    }
+  }
+
+  forward_to = [loki.write.default.receiver]
+}
+
 loki.write "default" {
 	endpoint {
     url       = "http://loki-write:3100/loki/api/v1/push"

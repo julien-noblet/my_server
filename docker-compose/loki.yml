@@ -139,8 +139,6 @@ services:
       - ../calibre/config/calibre-web.log:/calibre/config/calibre-web.log:ro
       # need waf volume !
       - ../waf_logs:/waf_logs:ro
-      # traefik
-      - ./traefik/access.log:/var/log/traefik/access.log:ro
     command:  
     - run 
     - --server.http.listen-addr=0.0.0.0:12345 

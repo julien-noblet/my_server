@@ -311,7 +311,7 @@ loki.process "traefik_access" {
     format = "2006-01-02T15:04:05.000000000Z07:00"
   }
 
-  labels {
+  stage.labels {
     values = {
       ClientAddr = "",
       ClientHost = "",

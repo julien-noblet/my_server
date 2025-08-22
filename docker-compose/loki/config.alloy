@@ -153,7 +153,7 @@ loki.process "modsec_audit" {
 
   stage.geoip {
     source = "XRealIp"
-    db = "/geolite2-geo-whois-asn-country.mmdb"
+    db = "/usr/share/GeoIP/GeoLite2-City.mmdb"
     db_type = "country"
   }
 

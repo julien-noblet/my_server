@@ -258,12 +258,12 @@ loki.process "calibre" {
   forward_to = [loki.write.default.receiver]
 }
 
-loki.file_match "traefik_access" {
+local.file_match "traefik_access" {
   path_targets = [{"__path__" = "/var/log/traefik/access.log", "app"="traefik",}]
 }
 
 loki.source.file "traefik_access" {
-  targets               = loki.file_match.traefik_access.targets
+  targets               = local.file_match.traefik_access.targets
   forward_to            = [loki.process.traefik_access.receiver]
   legacy_positions_file = "/var/log/positions.yaml"
 }

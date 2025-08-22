@@ -192,7 +192,7 @@ loki.process "modsec_audit" {
 
   stage.labels {
     values = {
-      client_ip = XRealIp,
+      client_ip = "XRealIp",
       geoip_city_name = "",
       geoip_country_name = "",
       geoip_country_code = "",

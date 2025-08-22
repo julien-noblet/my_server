@@ -26,7 +26,7 @@ loki.source.docker "docker_log_scrape" {
   labels           = {"app" = "docker"}
 }
 
-
+/*
 local.file_match "nginx_logs" {
   path_targets = [{"__path__" = "/waf_logs/nginx/access.log", "app"="waf",}]
 }
@@ -72,6 +72,7 @@ loki.process "nginx_logs" {
 
   forward_to = [loki.write.default.receiver]
 }
+/**/
 
 local.file_match "modsec_audit" {
   path_targets = [{"__path__" = "/waf_logs/modsec_audit.log", "app"="waf",}]

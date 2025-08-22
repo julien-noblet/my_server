@@ -307,7 +307,7 @@ loki.process "traefik_access" {
   }
 
   stage.geoip {
-    source = "XRealIp"
+    source = "ClientHost"
     db = "/usr/share/GeoIP/GeoLite2-City.mmdb"
     db_type = "city"
   }

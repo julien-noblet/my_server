@@ -48,6 +48,7 @@ services:
       - --metrics.prometheus.buckets=0.1,0.3,1.2,5.0
       - --accesslog=true
       - --accesslog.filePath=/access.log
+      - --accesslog.format=json
       - --providers.file.directory=/dynamic
       - --providers.file.watch=true
       - --certificatesresolvers.myresolver.acme.httpchallenge=true

@@ -127,10 +127,12 @@ services:
     image: grafana/alloy:latest
     restart: unless-stopped
     volumes:
-      - ./loki/alloy-local-config.yaml:/etc/alloy/config.alloy:ro
+      - ./loki/config.alloy:/etc/alloy/config.alloy:ro
       - ./loki/positions.yaml:/var/log/positions.yaml
       - /var/run/docker.sock:/var/run/docker.sock
       - ../calibre/config/calibre-web.log:/calibre/config/calibre-web.log:ro
+      - ../geolite2-geo-whois-asn-country.mmdb:/geolite2-geo-whois-asn-country.mmdb
+      - ../geolite2-city-ipv4.mmdb:/geolite2-city-ipv4.mmdb
       # need waf volume !
       - ../waf_logs:/waf_logs:ro
     command:  

@@ -38,13 +38,16 @@ services:
       traefik.docker.network: traefik
       traefik.http.middlewares.kobo-sync-headers.headers.customrequestheaders.X-Scheme: https
       traefik.http.middlewares.kobo-sync-headers.headers.accessControlAllowCredentials: true
-      traefik.http.routers.calibre.rule: Host(`skiltz.freeboxos.fr`)
-      traefik.http.routers.calibre.priority: 1
-      traefik.http.routers.calibre.entrypoints: websecure
-      traefik.http.routers.calibre.middlewares: waf@docker,kobo-sync-headers
+      traefik.http.routers.calibre-secure.rule: Host(`skiltz.freeboxos.fr`)
+      traefik.http.routers.calibre-secure.priority: 1
+      traefik.http.routers.calibre-secure.entrypoints: websecure
+      traefik.http.routers.calibre-secure.middlewares: waf@docker,kobo-sync-headers
       #secure-headers,
-      traefik.http.routers.calibre.tls.certresolver: myresolver
+      traefik.http.routers.calibre-secure.tls.certresolver: myresolver
       traefik.http.services.calibre.loadbalancer.server.port: 8083
+      traefik.http.routers.calibre.entrypoints: web
+      traefik.http.routers.calibre.middlewares: waf@docker,traefik-https-redirect
+      traefik.http.routers.calibre.rule: Host(`skiltz.freeboxos.fr`)
 
 volumes:
   calibre-config:

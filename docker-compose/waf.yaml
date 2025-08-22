@@ -8,7 +8,7 @@ services:
       - BACKEND=http://dummy
       - MODSEC_AUDIT_LOG=/var/log/modsec_audit.log
       - MODSEC_DEBUG_LOG=/var/log/modsec_debug.log
-      - REAL_IP_HEADER=X-Real-Ip
+      - REAL_IP_PROXY_HEADER=X-Real-Ip
     volumes:
       # export logs
       - ../waf_logs:/var/log/

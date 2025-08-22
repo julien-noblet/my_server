@@ -148,6 +148,8 @@ services:
     depends_on:
       traefik:
         condition: service_healthy
+      geoip:
+        condition: service_completed_successfully
     labels:
       traefik.enable: true
       traefik.docker.network: traefik

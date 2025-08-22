@@ -191,6 +191,23 @@ loki.process "modsec_audit" {
   }
 
 
+  stage.labels = {
+    values = {
+      client_ip = XRealIp,
+      geoip_city_name = "",
+      geoip_country_name = "",
+      geoip_country_code = "",
+      geoip_continent_name = "",
+      geoip_continent_code = "",
+      geoip_location_latitude = "",
+      geoip_location_longitude = "",
+      geoip_postal_code = "",
+      geoip_timezone = "",
+      geoip_subdivision_name = "",
+      geoip_subdivision_code = "",
+    }
+  }
+
 
   forward_to = [loki.write.default.receiver]
 }

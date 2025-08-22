@@ -181,7 +181,7 @@ loki.process "modsec_audit" {
       details = "",
     }
   }
- stage.json {
+  stage.json {
     source = "details"
     expressions = {
       severity = "",
@@ -190,8 +190,7 @@ loki.process "modsec_audit" {
     }
   }
 
-
-  stage.labels = {
+  stage.labels {
     values = {
       client_ip = XRealIp,
       geoip_city_name = "",

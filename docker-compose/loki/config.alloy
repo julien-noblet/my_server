@@ -109,7 +109,6 @@ loki.process "modsec_audit" {
     }
   }
 
-
   stage.timestamp {
     source = "time_stamp"
     format = "Mon Jan 02 15:04:05 2006"
@@ -158,22 +157,6 @@ loki.process "modsec_audit" {
     db_type = "city"
   }
 
-  stage.labels {
-		values = {
-			geoip_city_name          = "",
-			geoip_country_name       = "",
-			geoip_country_code       = "",
-			geoip_continent_name     = "",
-			geoip_continent_code     = "",
-			geoip_location_latitude  = "",
-			geoip_location_longitude = "",
-			geoip_postal_code        = "",
-			geoip_timezone           = "",
-			geoip_subdivision_name   = "",
-			geoip_subdivision_code   = "",
-		}
-	}
-
   stage.json {
     source = "messages"
     expressions = {
@@ -204,9 +187,30 @@ loki.process "modsec_audit" {
       geoip_timezone = "",
       geoip_subdivision_name = "",
       geoip_subdivision_code = "",
+      SecChUaMobile = "",
+      SecChUaPlatform = "",
+      Referer = "",
+      XForwardedPort = "",
+      AcceptLanguage = "",
+      AcceptEncoding = "",
+      Cookie = "",
+      SecChUa = "",
+      SecFetchUser = "",
+      Accept = "",
+      Priority = "",
+      UserAgent = "",
+      SecFetchSite = "",
+      XForwardedProto = "",
+      Host = "",
+      SecFetchDest = "",
+      SecFetchMode = "",
+      XForwardedServer = "",
+      UpgradeInsecureRequests = "",
+      messages = "",
+      uri = "",
+      http_method = "",
     }
   }
-
 
   forward_to = [loki.write.default.receiver]
 }

@@ -154,7 +154,6 @@ loki.process "modsec_audit" {
   stage.geoip {
     source = "XRealIp"
     db = "/geolite2-city-ipv4.mmdb"
-    db_type = "city"
   }
 
   stage.json {

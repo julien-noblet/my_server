@@ -95,7 +95,7 @@ loki.process "modsec_audit" {
   stage.json {
     source = "transaction"
     expressions = {
-      client_ip = "request.headers[\"X-Real-Ip\"]",
+      client_ip = "",
       time_stamp = "",
       server_id = "",
       client_port = "",
@@ -109,27 +109,6 @@ loki.process "modsec_audit" {
     }
   }
 
-  stage.geoip {
-    source = "client_ip"
-    db = "/geolite2-city-ipv4.mmdb"
-    db_type = "city"
-  }
-
-  stage.labels {
-		values = {
-			geoip_city_name          = "",
-			geoip_country_name       = "",
-			geoip_country_code       = "",
-			geoip_continent_name     = "",
-			geoip_continent_code     = "",
-			geoip_location_latitude  = "",
-			geoip_location_longitude = "",
-			geoip_postal_code        = "",
-			geoip_timezone           = "",
-			geoip_subdivision_name   = "",
-			geoip_subdivision_code   = "",
-		}
-	}
 
   stage.timestamp {
     source = "time_stamp"
@@ -172,6 +151,28 @@ loki.process "modsec_audit" {
       XRealIp = `"X-Real-Ip"`,
     }
   }
+
+  stage.geoip {
+    source = "XRealIp"
+    db = "/geolite2-city-ipv4.mmdb"
+    db_type = "city"
+  }
+
+  stage.labels {
+		values = {
+			geoip_city_name          = "",
+			geoip_country_name       = "",
+			geoip_country_code       = "",
+			geoip_continent_name     = "",
+			geoip_continent_code     = "",
+			geoip_location_latitude  = "",
+			geoip_location_longitude = "",
+			geoip_postal_code        = "",
+			geoip_timezone           = "",
+			geoip_subdivision_name   = "",
+			geoip_subdivision_code   = "",
+		}
+	}
 
   stage.json {
     source = "messages"

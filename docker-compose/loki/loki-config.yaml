@@ -46,3 +46,6 @@ analytics:
 
 compactor:
   working_directory: /tmp/compactor
+
+validation:
+  max-label-names-per-series: 50

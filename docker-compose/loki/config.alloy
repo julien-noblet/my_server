@@ -295,14 +295,11 @@ loki.process "traefik_access" {
       RequestScheme = "",
       RetryAttempts = "",
       RouterName = "",
-      StartLocal = "",
-      StartUTC = "",
       TLSCipher = "",
       TLSVersion = "",
       entryPointName = "",
       level = "",
       msg = "",
-      time = "",
     }
   }
 

@@ -27,7 +27,7 @@ services:
       traefik.enable: true
       traefik.http.routers.dummy.rule: Host(`82.65.16.41`)
       traefik.http.routers.dummy.middlewares: waf@docker
-      traefik.http.routers.entryPoints: web
+      traefik.http.routers.dummy.entryPoints: web, kuma
       traefik.http.routers.dummy-secure.rule: Host(`82.65.16.41`)
       traefik.http.routers.dummy-secure.tls: true
       traefik.http.routers.dummy-secure.middlewares: waf@docker

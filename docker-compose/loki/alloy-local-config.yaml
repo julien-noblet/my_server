@@ -70,15 +70,7 @@ loki.process "nginx_logs" {
     }
   }
 
-  forward_to = [loki.write.send_to_loki.receiver]
-}
-
-loki.write "send_to_loki" {
-  endpoint {
-    url = "http://loki-write:3100/loki/api/v1/push"
-    tenant_id = "tenant1"
-  }
-
+  forward_to = [loki.write.default.receiver]
 }
 
 local.file_match "modsec_audit" {

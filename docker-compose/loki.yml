@@ -33,6 +33,7 @@ services:
     - -target=read
     - -config.expand-env=true
     - --pattern-ingester.enabled=true
+    - -validation.max-label-names-per-series=50
       #ports:
       #- 3101:3100
       #- 7946
@@ -70,6 +71,7 @@ services:
       - -target=write
       - -config.expand-env=true
       - --pattern-ingester.enabled=true
+      - -validation.max-label-names-per-series=50
       #ports:
       #- 3102:3100
       #- 7946
@@ -113,6 +115,7 @@ services:
       - -legacy-read-mode=false
       - -config.expand-env=true
       - --pattern-ingester.enabled=true
+      - -validation.max-label-names-per-series=50
     depends_on:
       traefik:
         condition: service_healthy

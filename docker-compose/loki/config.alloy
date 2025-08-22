@@ -306,7 +306,7 @@ loki.process "traefik_access" {
     }
   }
 
-  process.timestamp {
+  stage.timestamp {
     source = "StartUTC"
     format = "2006-01-02T15:04:05.000000000Z07:00"
   }

@@ -49,9 +49,9 @@ services:
       #secure-headers,
       traefik.http.routers.calibre-automated-secure.tls.certresolver: myresolver
       traefik.http.services.calibre-automated.loadbalancer.server.port: 8083
-      traefik.http.routers.calibre-automated.entrypoints: web
-      traefik.http.routers.calibre-automated.middlewares: waf@docker
-      traefik.http.routers.calibre-automated.rule: Host(`calibre.local`)
+      #traefik.http.routers.calibre-automated.entrypoints: web
+      #traefik.http.routers.calibre-automated.middlewares: waf@docker
+      #traefik.http.routers.calibre-automated.rule: Host(`calibre.local`)
 
   calibre-web-automated-book-downloader:
     image: ghcr.io/calibrain/calibre-web-automated-book-downloader:latest
@@ -84,9 +84,9 @@ services:
       traefik.docker.network: traefik
       #secure-headers,
       traefik.http.services.calibre-downloaded.loadbalancer.server.port: 8084
-      traefik.http.routers.calibre-downloaded.entrypoints: web
+      traefik.http.routers.calibre-downloaded.entrypoints: webs
       traefik.http.routers.calibre-downloaded.middlewares: waf@docker
-      traefik.http.routers.calibre-downloaded.rule: Host(`down.local`)
+      traefik.http.routers.calibre-downloaded.rule: Host(`calibre.local`)
 
 volumes:
   calibre-web-automated-config:

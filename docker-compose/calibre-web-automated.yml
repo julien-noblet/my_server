@@ -42,7 +42,7 @@ services:
       traefik.docker.network: traefik
       traefik.http.middlewares.kobo2-sync-headers.headers.customrequestheaders.X-Scheme: https
       traefik.http.middlewares.kobo2-sync-headers.headers.accessControlAllowCredentials: true
-      traefik.http.routers.calibre-automated-secure.rule: Host(`skiltz.freeboxos.fr`) && PathPrefix(`/calibre-automated`)
+      traefik.http.routers.calibre-automated-secure.rule: Host(`skiltz.freeboxos.fr`)
       traefik.http.routers.calibre-automated-secure.priority: 1
       traefik.http.routers.calibre-automated-secure.entrypoints: websecure
       traefik.http.routers.calibre-automated-secure.middlewares: waf@docker,kobo2-sync-headers

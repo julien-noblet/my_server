@@ -3,7 +3,8 @@ name: blocky
 include:
   - docker-compose/backup-db.yml
   - docker-compose/blocky.yml
-  - docker-compose/calibre-web.yml
+  - docker-compose/calibre-web-automated.yml
+  # - docker-compose/calibre-web.yml # can't be used with cwa
   - docker-compose/grafana.yml
   - docker-compose/lists-download.yml
   - docker-compose/manyfold.yml
@@ -13,7 +14,6 @@ include:
   - docker-compose/traefik.yml
   - docker-compose/waf.yaml
   - docker-compose/loki.yml
-  - docker-compose/calibre-web-automated.yml
   #######
   # WIP #
   #######

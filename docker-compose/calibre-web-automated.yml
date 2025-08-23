@@ -1,0 +1,99 @@
+name: calibre-web-automated
+
+services:
+  calibre-web-automated:
+    image: crocodilestick/calibre-web-automated:latest
+    container_name: calibre-web-automated
+    depends_on:
+      blocky:
+        condition: service_healthy
+      traefik:
+        condition: service_healthy
+    volumes:
+      - ../calibre/cwa-config:/config:rw
+      - calibre-web-automated-books:/calibre-library:rw
+      - ../calibre/plugins:/config/.config/calibre/plugins
+      - ../calibre/incomming:/cwa-book-ingest
+    environment:
+      PUID: 1000 # User ID
+      PGID: 1000 # Group ID
+      TZ: Europe/Paris
+      HARDCOVER_TOKEN: ${HARDCOVER_API_KEY}
+      NETWORK_SHARE_MODE: false
+      # optional - not working if aarch64!
+      # DOCKER_MODS: linuxserver/mods:universal-calibre
+      # optional
+      OAUTHLIB_RELAX_TOKEN_SCOPE: 1
+    networks:
+      - blocky  # ==> DNS
+      - traefik # ==> Reverse Proxy
+      - public  # ==> Public Access
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8083"]
+      interval: 30s
+      timeout: 20s
+      retries: 5
+      start_period: 1m
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      traefik.enable: true
+      traefik.docker.network: traefik
+      traefik.http.middlewares.kobo2-sync-headers.headers.customrequestheaders.X-Scheme: https
+      traefik.http.middlewares.kobo2-sync-headers.headers.accessControlAllowCredentials: true
+      traefik.http.routers.calibre-automated-secure.rule: Host(`skiltz.freeboxos.fr`) && PathPrefix(`/calibre-automated`)
+      traefik.http.routers.calibre-automated-secure.priority: 1
+      traefik.http.routers.calibre-automated-secure.entrypoints: websecure
+      traefik.http.routers.calibre-automated-secure.middlewares: waf@docker,kobo2-sync-headers
+      #secure-headers,
+      traefik.http.routers.calibre-automated-secure.tls.certresolver: myresolver
+      traefik.http.services.calibre-automated.loadbalancer.server.port: 8083
+      traefik.http.routers.calibre-automated.entrypoints: web
+      traefik.http.routers.calibre-automated.middlewares: waf@docker
+      traefik.http.routers.calibre-automated.rule: Host(`skiltz.freeboxos.fr`)
+
+  calibre-web-automated-book-downloader:
+    image: ghcr.io/calibrain/calibre-web-automated-book-downloader:latest
+    environment:
+      FLASK_PORT: 8084
+      LOG_LEVEL: info
+      BOOK_LANGUAGE: fr
+      USE_BOOK_TITLE: true
+      TZ: Europe/Paris
+      APP_ENV: prod
+      UID: 1000
+      GID: 1000
+    ports:
+      - 8084:8084
+    networks:
+      - blocky  # ==> DNS
+      - traefik # ==> Reverse Proxy
+      - public  # ==> Public Access
+    restart: unless-stopped
+    volumes:
+    # This is where the books will be downloaded to, usually it would be 
+    # the same as whatever you gave in "calibre-web-automated"
+      - ../calibre/incomming:/cwa-book-ingest
+    labels:
+      traefik.enable: true
+      traefik.docker.network: traefik
+      #secure-headers,
+      traefik.http.services.calibre-downloaded.loadbalancer.server.port: 8083
+      traefik.http.routers.calibre-downloaded.entrypoints: web
+      traefik.http.routers.calibre-downloaded.middlewares: waf@docker
+      traefik.http.routers.calibre-downloaded.rule: Host(`down.local`)
+
+volumes:
+  calibre-web-automated-config:
+    driver: local
+    driver_opts:
+      type: none
+      device: ../calibre/config
+      o: bind
+  calibre-web-automated-books:
+    driver: local
+    driver_opts:
+      type: none
+      device: ../calibre/books
+      o: bind

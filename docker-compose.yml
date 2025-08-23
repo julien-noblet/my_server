@@ -13,6 +13,7 @@ include:
   - docker-compose/traefik.yml
   - docker-compose/waf.yaml
   - docker-compose/loki.yml
+  - docker-compose/calibre-web-automated.yml
   #######
   # WIP #
   #######

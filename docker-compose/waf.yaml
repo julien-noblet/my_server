@@ -8,7 +8,7 @@ services:
       - BACKEND=http://dummy
       - MODSEC_AUDIT_LOG=/var/log/modsec_audit.log
       - MODSEC_DEBUG_LOG=/var/log/modsec_debug.log
-      - ALLOWED_METHODS=GET HEAD POST OPTIONS PATCH
+      - ALLOWED_METHODS=GET HEAD POST OPTIONS PATCH PUT
       - REAL_IP_HEADER=X-Real-Ip
       - SET_REAL_IP_FROM=172.0.0.0/8
     volumes:

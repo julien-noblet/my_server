@@ -54,7 +54,7 @@ services:
       #traefik.http.routers.calibre-automated.rule: Host(`calibre.local`)
 
   calibre-web-automated-book-downloader:
-    image: ghcr.io/calibrain/calibre-web-automated-book-downloader:latest
+    image: ghcr.io/calibrain/calibre-web-automated-book-downloader:dev
     container_name: calibre-web-automated-book-downloaded
     depends_on:
       calibre-web-automated:
@@ -68,6 +68,7 @@ services:
       APP_ENV: prod
       UID: 1000
       GID: 1000
+      PRIORITIZE_WELIB: true
     ports:
       - 8084:8084
     networks:

@@ -83,7 +83,7 @@ services:
       traefik.enable: true
       traefik.docker.network: traefik
       #secure-headers,
-      traefik.http.services.calibre-downloaded.loadbalancer.server.port: 8083
+      traefik.http.services.calibre-downloaded.loadbalancer.server.port: 8084
       traefik.http.routers.calibre-downloaded.entrypoints: web
       traefik.http.routers.calibre-downloaded.middlewares: waf@docker
       traefik.http.routers.calibre-downloaded.rule: Host(`down.local`)

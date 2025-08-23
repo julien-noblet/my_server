@@ -51,7 +51,7 @@ services:
       traefik.http.services.calibre-automated.loadbalancer.server.port: 8083
       traefik.http.routers.calibre-automated.entrypoints: web
       traefik.http.routers.calibre-automated.middlewares: waf@docker
-      traefik.http.routers.calibre-automated.rule: Host(`skiltz.freeboxos.fr`)
+      traefik.http.routers.calibre-automated.rule: Host(`calibre.local`)
 
   calibre-web-automated-book-downloader:
     image: ghcr.io/calibrain/calibre-web-automated-book-downloader:latest

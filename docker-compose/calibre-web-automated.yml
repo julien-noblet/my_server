@@ -55,6 +55,10 @@ services:
 
   calibre-web-automated-book-downloader:
     image: ghcr.io/calibrain/calibre-web-automated-book-downloader:latest
+    container_name: calibre-web-automated-book-downloaded
+    depends_on:
+      calibre-web-automated:
+        condition: service_healthy
     environment:
       FLASK_PORT: 8084
       LOG_LEVEL: info
